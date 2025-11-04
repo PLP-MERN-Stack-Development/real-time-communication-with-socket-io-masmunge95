@@ -16,8 +16,37 @@ Palaver is a full-featured, real-time chat application built with the MERN stack
 
 ## Deployment
 
-- **Frontend (Netlify):** [https://mern-blog-manager-v2.netlify.app/](https://mern-blog-manager-v2.netlify.app/)
-- **Backend (Render):** [https://mern-stack-integration-masmunge95.onrender.com/](https://mern-stack-integration-masmunge95.onrender.com/)
+The application is deployed and live at the following URLs:
+
+- **Frontend (Netlify):** [https://palaver-chat.netlify.app/](https://palaver-chat.netlify.app/)
+- **Backend (Render):** [https://real-time-communication-with-socket-io-q2y7.onrender.com/](https://real-time-communication-with-socket-io-q2y7.onrender.com/)
+
+### Deployment Instructions
+
+To deploy your own version of this application, follow these steps:
+
+#### 1. Backend on Render
+
+- Create a new **Web Service** on Render and connect your GitHub repository.
+- **Root Directory**: `server`
+- **Build Command**: `npm install`
+- **Start Command**: `npm start`
+- Add the following Environment Variables:
+  - `MONGO_URI`: Your MongoDB connection string.
+  - `CLERK_SECRET_KEY`: Your secret key from your Clerk production instance.
+  - `CLIENT_URL`: The URL of your deployed Netlify frontend (e.g., `https://your-app-name.netlify.app`).
+
+#### 2. Frontend on Netlify
+
+- Create a new site on Netlify and connect it to your GitHub repository.
+- **Base directory**: `client`
+- **Build command**: `npm run build`
+- **Publish directory**: `client/build`
+- Add the following Environment Variables in your site settings:
+  - `REACT_APP_CLERK_PUBLISHABLE_KEY`: Your publishable key from your Clerk production instance.
+  - `REACT_APP_API_URL`: The URL of your deployed Render backend (e.g., `https://your-app-name.onrender.com`).
+
+After setting up both services, your application will be live. Remember to update your Clerk instance with the deployed URLs for proper authentication redirects.
 
 ## 🛠️ Setup Instructions
 
@@ -32,8 +61,8 @@ To get the project running locally, please follow these steps:
 ### 1. Clone the Repository
 
 ```bash
-git clone <your-repository-url>
-cd <repository-name>
+git clone https://github.com/masmunge95/real-time-communication-with-socket-io-masmunge95.git
+cd palaver-chat
 ```
 
 ### 2. Server Setup
