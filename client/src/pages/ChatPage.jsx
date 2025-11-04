@@ -3,11 +3,9 @@ import UserList from '../components/UserList';
 import MessageList from '../components/MessageList';
 import MessageInput from '../components/MessageInput';
 import { useChat } from '../context/ChatContext';
-import { useUser } from '@clerk/clerk-react';
 
 const ChatPage = () => {
   const { isUserListVisible, setIsUserListVisible } = useChat();
-  const { isSignedIn } = useUser();
   const userListRef = useRef(null);
 
   useEffect(() => {
