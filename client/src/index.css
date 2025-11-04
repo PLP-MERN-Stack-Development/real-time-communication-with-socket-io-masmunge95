@@ -334,6 +334,7 @@ body.light .app-header .logo img {
 .message-content {
   flex-grow: 1;
   overflow-wrap: break-word; /* Prevents long words from breaking layout */
+  min-width: 0; /* Flexbox fix to allow content to shrink */
 }
 
 .message {
@@ -539,6 +540,8 @@ body.light .app-header .logo img {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  max-width: 150px; /* Adjust as needed */
+  display: inline-block;
 }
 .reaction-badge-container {
   cursor: pointer;
@@ -560,12 +563,18 @@ body.light .app-header .logo img {
   color: #ccc;
 }
 
-/* Message Input */
-.message-input {
+.message-input-area {
   display: flex;
+  flex-direction: column;
   padding: 1rem;
   border-top: 1px solid var(--border-color);
   background-color: var(--background-dark);
+}
+
+/* Message Input */
+.message-input {
+  display: flex;
+  width: 100%;
 }
 .message-input .attach-btn {
   background: none;
@@ -580,11 +589,12 @@ body.light .app-header .logo img {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-left: 1rem;
   padding: 0.25rem 0.5rem;
   background-color: var(--background-lighter);
   border-radius: 4px;
-  max-width: 200px; /* Limit preview width */
+  max-width: 100%; /* Take full width */
+  margin-bottom: 0.5rem; /* Space between preview and input */
+  min-width: 0; /* Flexbox fix to allow shrinking */
 }
 
 .file-info {
@@ -612,6 +622,21 @@ body.light .app-header .logo img {
   border: none;
   color: #aaa;
   cursor: pointer;
+}
+
+.upload-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--primary-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .message-input input {

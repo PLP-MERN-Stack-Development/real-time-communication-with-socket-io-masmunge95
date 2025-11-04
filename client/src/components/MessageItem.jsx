@@ -12,6 +12,7 @@ const MessageItem = ({ msg, selectedUser }) => {
   const msgRef = useRef(null);
 
   const [isEditing, setIsEditing] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   // Bug fix: Ensure editedContent is updated if msg.message changes from props
   const [editedContent, setEditedContent] = useState(msg.message);
   const [pickerMessageId, setPickerMessageId] = useState(null);
@@ -82,20 +83,30 @@ const MessageItem = ({ msg, selectedUser }) => {
   }, [msg, currentUser, markMessageAsRead]);
 
   const handleSelectReaction = (messageId, emoji) => {
+    setIsProcessing(true);
     reactToMessage(messageId, emoji);
     setPickerMessageId(null);
+    // Note: We don't set isProcessing to false here. The UI will update
+    // once the socket event comes back, which is fast enough feedback.
+    // A short timeout could be added if needed: setTimeout(() => setIsProcessing(false), 1000);
   };
+
 
   const handleSaveEdit = () => {
     if (editedContent.trim() !== msg.message) {
+      setIsProcessing(true);
       editMessage(msg._id, editedContent.trim());
     }
     setIsEditing(false);
+    // The component will re-render with new props, resetting the state.
   };
 
   const handleDelete = () => {
     if (window.confirm('Are you sure you want to delete this message? This cannot be undone.')) {
+      setIsProcessing(true);
       deleteMessage(msg._id);
+      // The message will be removed from the list via socket update,
+      // so we don't need to set isProcessing back to false.
     }
   };
 
@@ -137,8 +148,8 @@ const MessageItem = ({ msg, selectedUser }) => {
                 onKeyDown={(e) => e.key === 'Enter' && handleSaveEdit()}
                 className="edit-message-input"
               />
-              <button onClick={handleSaveEdit} className="edit-action-btn">Save</button>
-              <button onClick={() => setIsEditing(false)} className="edit-action-btn">Cancel</button>
+              <button onClick={handleSaveEdit} className="edit-action-btn" disabled={isProcessing}>Save</button>
+              <button onClick={() => setIsEditing(false)} className="edit-action-btn" disabled={isProcessing}>Cancel</button>
             </div>
           ) : (
             <>
@@ -152,6 +163,7 @@ const MessageItem = ({ msg, selectedUser }) => {
           <button
             className="react-button"
             ref={pickerMessageId === msg._id ? reactionButtonRef : null}
+            disabled={isProcessing}
             onClick={(e) => {
               reactionButtonRef.current = e.currentTarget;
               setPickerMessageId(msg._id);
@@ -161,10 +173,10 @@ const MessageItem = ({ msg, selectedUser }) => {
           </button>
           {isSentByMe && !isEditing && (
             <>
-              <button className="react-button edit-button" onClick={() => setIsEditing(true)}>
+              <button className="react-button edit-button" onClick={() => setIsEditing(true)} disabled={isProcessing}>
                 <Pencil size={16} />
               </button>
-              <button className="react-button delete-button" onClick={handleDelete}>
+              <button className="react-button delete-button" onClick={handleDelete} disabled={isProcessing}>
                 <Trash2 size={16} />
               </button>
             </>

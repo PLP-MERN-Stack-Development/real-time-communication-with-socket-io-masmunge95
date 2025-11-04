@@ -75,24 +75,15 @@ const MessageInput = () => {
     : 'Type a message...';
 
   return (
-    <form onSubmit={handleSubmit} className="message-input">
-      <input
-        type="file"
-        ref={fileInputRef}
-        style={{ display: 'none' }}
-        onChange={(e) => setFile(e.target.files[0] || null)}
-      />
-      <button type="button" className="attach-btn" onClick={() => fileInputRef.current.click()}>
-        <Paperclip size={20} />
-      </button>
-      <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} onKeyPress={handleTyping} placeholder={placeholder} />
-      <button type="submit" disabled={isUploading}>
-        {isUploading ? 'Uploading...' : 'Send'}
-      </button>
+    <div className="message-input-area">
       {file && (
         <div className="file-preview-container">
           <div className="file-info">
-            {previewUrl && <img src={previewUrl} alt="preview" className="file-thumbnail-preview" />}
+            {isUploading ? (
+              <div className="upload-spinner"></div>
+            ) : (
+              previewUrl && <img src={previewUrl} alt="preview" className="file-thumbnail-preview" />
+            )}
             <span className="file-name-preview">{file.name}</span>
           </div>
           <button type="button" className="remove-file-btn" onClick={() => { setFile(null); fileInputRef.current.value = null; }} aria-label="Remove file">
@@ -100,7 +91,22 @@ const MessageInput = () => {
           </button>        
         </div>
       )}
-    </form>
+      <form onSubmit={handleSubmit} className="message-input">
+        <input
+          type="file"
+          ref={fileInputRef}
+          style={{ display: 'none' }}
+          onChange={(e) => setFile(e.target.files[0] || null)}
+        />
+        <button type="button" className="attach-btn" onClick={() => fileInputRef.current.click()}>
+          <Paperclip size={20} />
+        </button>
+        <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} onKeyPress={handleTyping} placeholder={placeholder} />
+        <button type="submit" disabled={isUploading}>
+          {isUploading ? 'Uploading...' : 'Send'}
+        </button>
+      </form>
+    </div>
   );
 };
 
